@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Explora y aprende con realidad aumentada.">
+  <title>AR Aprende | Realidad Aumentada Educativa</title>
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <style>
+    :root{
+      --primary:#5b5ce2; --secondary:#18b7a0; --accent:#ffb84d;
+      --dark:#20234a; --light:#f5f7ff; --white:#fff;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:Arial,Helvetica,sans-serif;color:var(--dark);background:var(--light);line-height:1.6}
+    header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);box-shadow:0 2px 12px #00000012}
+    nav{max-width:1150px;margin:auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between}
+    .logo{font-size:1.35rem;font-weight:800;color:var(--primary);text-decoration:none}
+    .logo span{color:var(--secondary)}
+    nav ul{display:flex;gap:22px;list-style:none}
+    nav a{text-decoration:none;color:var(--dark);font-weight:700}
+    nav a:hover{color:var(--primary)}
+    .hero{min-height:620px;display:grid;place-items:center;padding:70px 22px;background:
+      radial-gradient(circle at 85% 20%,#8b8df755,transparent 28%),
+      radial-gradient(circle at 10% 80%,#18b7a033,transparent 28%),
+      linear-gradient(135deg,#eef0ff,#ffffff)}
+    .hero-inner{max-width:1150px;width:100%;display:grid;grid-template-columns:1.1fr .9fr;gap:45px;align-items:center}
+    .badge{display:inline-block;background:#e7e8ff;color:var(--primary);padding:8px 14px;border-radius:30px;font-weight:800;margin-bottom:16px}
+    h1{font-size:clamp(2.5rem,6vw,4.8rem);line-height:1.05;margin-bottom:20px}
+    h1 span{color:var(--primary)}
+    .hero p{font-size:1.15rem;max-width:650px;color:#505477;margin-bottom:28px}
+    .buttons{display:flex;flex-wrap:wrap;gap:12px}
+    .btn{display:inline-block;border:0;border-radius:14px;padding:13px 20px;font-weight:800;text-decoration:none;cursor:pointer;font-size:1rem}
+    .btn-primary{background:var(--primary);color:white;box-shadow:0 8px 20px #5b5ce244}
+    .btn-secondary{background:white;color:var(--dark);border:2px solid #e2e4f3}
+    .hero-card{background:white;border-radius:28px;padding:20px;box-shadow:0 20px 50px #363b6b22;transform:rotate(2deg)}
+    .orb{height:330px;border-radius:22px;background:linear-gradient(145deg,#5b5ce2,#18b7a0);display:grid;place-items:center;color:white;text-align:center;overflow:hidden;position:relative}
+    .orb::before,.orb::after{content:"";position:absolute;border-radius:50%;border:2px solid #ffffff55}
+    .orb::before{width:270px;height:270px}.orb::after{width:180px;height:180px}
+    .orb-content{position:relative;z-index:1;font-size:5rem}
+    .orb-content p{font-size:1rem;color:white;margin:8px 0}
+    section{padding:80px 22px}
+    .container{max-width:1150px;margin:auto}
+    .section-title{text-align:center;margin-bottom:45px}
+    .section-title h2{font-size:2.3rem;margin-bottom:8px}
+    .section-title p{color:#656987}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+    .card{background:white;border-radius:22px;padding:28px;box-shadow:0 8px 25px #31345d12;border:1px solid #eaebf6}
+    .icon{width:56px;height:56px;border-radius:16px;background:#eef0ff;display:grid;place-items:center;font-size:1.8rem;margin-bottom:16px}
+    .card h3{margin-bottom:8px}.card p{color:#666b87}
+    .ar-section{background:var(--dark);color:white}
+    .ar-grid{display:grid;grid-template-columns:1fr 1fr;gap:35px;align-items:center}
+    .ar-text p{color:#d8daf0;margin:15px 0 22px}
+    .viewer{background:#11142d;border-radius:25px;padding:14px;min-height:430px;display:flex;align-items:center;justify-content:center}
+    model-viewer{width:100%;height:400px;background:linear-gradient(145deg,#252957,#101226);border-radius:18px;--poster-color:transparent}
+    .ar-hint{font-size:.9rem;color:#aeb3d6;margin-top:10px}
+    .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .step{background:white;padding:25px;border-radius:20px;text-align:center}
+    .number{width:42px;height:42px;margin:0 auto 12px;border-radius:50%;display:grid;place-items:center;background:var(--secondary);color:white;font-weight:900}
+    .teacher{background:#fff7e9}
+    .teacher-box{max-width:900px;margin:auto;background:white;border-radius:25px;padding:35px;box-shadow:0 10px 30px #8a672022}
+    .teacher-box ul{padding-left:22px;margin-top:15px}.teacher-box li{margin:8px 0}
+    footer{background:#171a38;color:#dce0ff;text-align:center;padding:35px 22px}
+    footer strong{color:white}
+    @media(max-width:800px){
+      nav ul{display:none}.hero-inner,.ar-grid{grid-template-columns:1fr}.hero{padding-top:45px}
+      .cards,.steps{grid-template-columns:1fr}.hero-card{transform:none}.orb{height:250px}
+      section{padding:60px 18px}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <nav>
+    <a class="logo" href="#">AR <span>Aprende</span></a>
+    <ul>
+      <li><a href="#inicio">Inicio</a></li>
+      <li><a href="#actividades">Actividades</a></li>
+      <li><a href="#realidad-aumentada">Realidad aumentada</a></li>
+      <li><a href="#docentes">Docentes</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+<section class="hero" id="inicio">
+  <div class="hero-inner">
+    <div>
+      <span class="badge">🚀 Aprende de una forma diferente</span>
+      <h1>Descubre el mundo con <span>realidad aumentada</span></h1>
+      <p>Una experiencia educativa lúdica, interactiva e inclusiva para aprender explorando objetos y contenidos en 3D.</p>
+      <div class="buttons">
+        <a class="btn btn-primary" href="#realidad-aumentada">🔍 Explorar AR</a>
+        <a class="btn btn-secondary" href="#actividades">🎮 Ver actividades</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="orb">
+        <div class="orb-content">🪐<p>Explora • Aprende • Descubre</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="actividades">
+  <div class="container">
+    <div class="section-title">
+      <h2>Actividades educativas</h2>
+      <p>Aprender puede ser divertido, visual e interactivo.</p>
+    </div>
+    <div class="cards">
+      <article class="card"><div class="icon">🌎</div><h3>Explora el planeta</h3><p>Conoce lugares, continentes y fenómenos de nuestro planeta mediante modelos visuales.</p></article>
+      <article class="card"><div class="icon">🧬</div><h3>Descubre ciencias</h3><p>Observa modelos tridimensionales para comprender conceptos científicos de forma sencilla.</p></article>
+      <article class="card"><div class="icon">🧩</div><h3>Aprende jugando</h3><p>Resuelve desafíos y actividades que convierten el aprendizaje en una experiencia entretenida.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="ar-section" id="realidad-aumentada">
+  <div class="container ar-grid">
+    <div class="ar-text">
+      <span class="badge">📱 Experiencia AR</span>
+      <h2>Explora un objeto en 3D</h2>
+      <p>Gira, acerca y observa el modelo. En un dispositivo compatible, puedes pulsar el botón de realidad aumentada para llevarlo al espacio real.</p>
+      <button class="btn btn-primary" onclick="document.querySelector('model-viewer').activateAR()">✨ Activar realidad aumentada</button>
+      <p class="ar-hint">Nota: la función AR depende del navegador y del dispositivo. En Android suele funcionar con ARCore/Scene Viewer y en iPhone/iPad con Quick Look.</p>
+    </div>
+    <div class="viewer">
+      <model-viewer
+        src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+        ios-src="https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
+        alt="Modelo 3D de un astronauta"
+        camera-controls
+        auto-rotate
+        ar
+        ar-modes="webxr scene-viewer quick-look"
+        shadow-intensity="1"
+        exposure="1">
+        <button slot="ar-button" class="btn btn-primary" style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%)">📱 Ver en mi espacio</button>
+      </model-viewer>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-title"><h2>¿Cómo funciona?</h2><p>Solo necesitas un dispositivo compatible.</p></div>
+    <div class="steps">
+      <div class="step"><div class="number">1</div><h3>Explora</h3><p>Selecciona una actividad educativa.</p></div>
+      <div class="step"><div class="number">2</div><h3>Interactúa</h3><p>Observa y manipula el modelo 3D.</p></div>
+      <div class="step"><div class="number">3</div><h3>Aprende</h3><p>Relaciona lo que ves con el contenido.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="teacher" id="docentes">
+  <div class="teacher-box">
+    <div class="section-title" style="margin-bottom:10px">
+      <h2>👩‍🏫 Espacio para docentes</h2>
+      <p>Un recurso que puede complementar las clases.</p>
+    </div>
+    <p>Los docentes pueden utilizar la realidad aumentada como apoyo para presentar contenidos de manera más dinámica, visual y participativa.</p>
+    <ul>
+      <li>Facilita la comprensión de conceptos abstractos.</li>
+      <li>Promueve la participación y la exploración.</li>
+      <li>Permite complementar actividades tradicionales.</li>
+      <li>Busca reducir barreras mediante experiencias visuales e interactivas.</li>
+    </ul>
+  </div>
+</section>
+</main>
+
+<footer>
+  <p><strong>AR Aprende</strong> · Realidad aumentada educativa</p>
+  <p>Diseñada para aprender, explorar y descubrir.</p>
+</footer>
+
+<script>
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click',e=>{
+      const target=document.querySelector(a.getAttribute('href'));
+      if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth'});}
+    });
+  });
+</script>
+</body>
+</html>
